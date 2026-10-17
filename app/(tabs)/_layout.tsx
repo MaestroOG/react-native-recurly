@@ -20,7 +20,7 @@ const TabLayout = () => {
         )
     }
     return (
-        <Tabs screenOptions={{
+        <Tabs initialRouteName="index" screenOptions={{
             headerShown: false, tabBarShowLabel: false, tabBarStyle: {
                 position: 'absolute',
                 bottom: Math.max(insets.bottom, tabBar.horizontalInset),
