@@ -1,24 +1,38 @@
 import { tabs } from '@/constants/data'
 import { colors, components } from '@/constants/theme'
+import { useAuth } from '@clerk/expo'
 import clsx from 'clsx'
-import { Tabs } from 'expo-router'
+import { Redirect, Tabs } from 'expo-router'
 import React from 'react'
 import { Image, View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 const tabBar = components.tabBar;
 
+const TabIcon = ({ focused, icon }: TabIconProps) => {
+    return (
+        <View className='tabs-icon'>
+            <View className={clsx('tabs-pill', focused && 'tabs-active')}>
+                <Image source={icon} resizeMode='contain' className='tabs-glyph' />
+            </View>
+        </View>
+    )
+}
+
 const TabLayout = () => {
     const insets = useSafeAreaInsets()
-    const TabIcon = ({ focused, icon }: TabIconProps) => {
-        return (
-            <View className='tabs-icon'>
-                <View className={clsx('tabs-pill', focused && 'tabs-active')}>
-                    <Image source={icon} resizeMode='contain' className='tabs-glyph' />
-                </View>
-            </View>
-        )
+    const { isSignedIn, isLoaded } = useAuth();
+
+    if (!isLoaded) {
+        return null;
     }
+
+    if (!isSignedIn) {
+        return (<Redirect href="/(auth)/sign-in" />
+        );
+
+    }
+
     return (
         <Tabs initialRouteName="index" screenOptions={{
             headerShown: false, tabBarShowLabel: false, tabBarStyle: {
@@ -44,7 +58,7 @@ const TabLayout = () => {
                 <Tabs.Screen
                     key={tab.name}
                     name={tab.name}
-                    options={{ title: tab.title, tabBarIcon: ({ focused }) => <TabIcon focused={focused} icon={tab.icon} /> }} />
+                    options={{ title: tab.title, tabBarIcon: ({ focused }) => <TabIcon focused={focused} icon={tab.icon} />, headerShown: false }} />
             ))}
         </Tabs>
     )

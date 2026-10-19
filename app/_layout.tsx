@@ -1,7 +1,18 @@
 import "@/global.css";
+import { ClerkProvider } from "@clerk/expo";
+import { tokenCache } from "@clerk/expo/token-cache";
 import { useFonts } from "expo-font";
 import { SplashScreen, Stack } from "expo-router";
 import { useEffect } from "react";
+import { PostHogAppProvider } from "@/lib/posthog";
+
+SplashScreen.preventAutoHideAsync();
+
+const publishableKey = String(process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY) ?? "";
+
+if (!publishableKey) {
+  throw new Error("Missing Publishable Key. Please add it to your .env file");
+}
 
 export default function RootLayout() {
   const [fontsLoaded] = useFonts(
@@ -24,11 +35,21 @@ export default function RootLayout() {
   if (!fontsLoaded) {
     return null;
   }
-  return <Stack>
-    <Stack.Screen
-      name="(tabs)"
-      options={{ headerShown: false }}
-    />
+  return (
+    <ClerkProvider tokenCache={tokenCache} publishableKey={publishableKey}>
+      <PostHogAppProvider>
+        <Stack>
+          <Stack.Screen
+            name="(tabs)"
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="(auth)"
+            options={{ headerShown: false }}
+          />
 
-  </Stack>;
+        </Stack>
+      </PostHogAppProvider>
+    </ClerkProvider>
+  );
 }

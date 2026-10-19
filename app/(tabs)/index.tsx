@@ -1,12 +1,14 @@
 import ListHeading from '@/components/ListHeading';
 import SubscriptionCard from '@/components/SubscriptionCard';
 import UpcomingSubscriptionCard from '@/components/UpcomingSubscriptionCard';
-import { HOME_BALANCE, HOME_SUBSCRIPTIONS, HOME_USER, UPCOMING_SUBSCRIPTIONS } from '@/constants/data';
+import { HOME_BALANCE, HOME_SUBSCRIPTIONS, UPCOMING_SUBSCRIPTIONS } from '@/constants/data';
 import { icons } from '@/constants/icons';
 import images from '@/constants/images';
 import { currencyFormat } from '@/lib/utils';
+import { useUser } from '@clerk/expo';
 import dayjs from 'dayjs';
 import { styled } from 'nativewind';
+import { usePostHog } from 'posthog-react-native';
 import React, { useState } from 'react';
 import { FlatList, Image, Text, View } from 'react-native';
 import { SafeAreaView as RNSafeAreaView } from 'react-native-safe-area-context';
@@ -14,8 +16,30 @@ import { SafeAreaView as RNSafeAreaView } from 'react-native-safe-area-context';
 const SafeAreaView = styled(RNSafeAreaView);
 
 const Home = () => {
+  const { user } = useUser();
+  const posthog = usePostHog();
 
   const [expandedId, setExpandedId] = useState<string | null>(null)
+
+  const displayName = user?.firstName || user?.fullName || user?.emailAddresses[0]?.emailAddress || 'User';
+
+  const handleSubscriptionPress = (subscription: typeof HOME_SUBSCRIPTIONS[number]) => {
+    const isExpanding = expandedId !== subscription.id;
+
+    const subscriptionCategory = subscription.category || subscription.plan || 'uncategorized';
+
+    posthog.capture('subscription_details_toggled', {
+      billing_interval: subscription.billing,
+      is_expanding: isExpanding,
+      subscription_category: subscriptionCategory,
+    });
+    posthog.logger.info('subscription_details_toggled', {
+      billing_interval: subscription.billing,
+      is_expanding: isExpanding,
+      subscription_category: subscriptionCategory,
+    });
+    setExpandedId(currentId => (currentId === subscription.id ? null : subscription.id));
+  };
 
   return (
     <SafeAreaView className="flex-1 bg-background p-5">
@@ -27,10 +51,10 @@ const Home = () => {
 
               <View className="home-user">
                 <Image
-                  source={images.avatar}
+                  source={user?.imageUrl ? { uri: user.imageUrl } : images.avatar}
                   className="home-avatar"
                 />
-                <Text className="home-user-name">{HOME_USER.name}</Text>
+                <Text className="home-user-name">{displayName}</Text>
               </View>
 
               <Image source={icons.add} className="home-add-icon" />
@@ -62,7 +86,7 @@ const Home = () => {
         className="flex-1"
         data={HOME_SUBSCRIPTIONS}
         keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (<SubscriptionCard {...item} expanded={expandedId === item.id} onPress={() => setExpandedId(currentId => (currentId === item.id ? null : item.id))} />)}
+        renderItem={({ item }) => (<SubscriptionCard {...item} expanded={expandedId === item.id} onPress={() => handleSubscriptionPress(item)} />)}
         extraData={expandedId}
         ItemSeparatorComponent={() => <View className="h-4" />}
         showsVerticalScrollIndicator={false}
