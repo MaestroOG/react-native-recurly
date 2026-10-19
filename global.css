@@ -229,6 +229,114 @@
         @apply py-4 text-sm font-sans-medium text-black/60;
     }
 
+    .insights-title {
+        @apply text-3xl font-sans-bold text-primary;
+    }
+
+    .insights-subtitle {
+        @apply mb-5 mt-1 text-sm font-sans-medium text-muted-foreground;
+    }
+
+    .insight-card {
+        @apply rounded-3xl border border-border bg-card p-5;
+    }
+
+    .insight-section-heading {
+        @apply flex-row items-start justify-between gap-2;
+    }
+
+    .insight-card-title {
+        @apply text-lg font-sans-bold text-primary;
+    }
+
+    .insight-card-caption {
+        @apply mt-1 text-xs font-sans-medium text-muted-foreground;
+    }
+
+    .insight-total {
+        @apply text-lg font-sans-bold text-accent;
+    }
+
+    .insight-chart {
+        @apply mt-6 h-48 flex-row items-end justify-between gap-2;
+    }
+
+    .insight-chart-column {
+        @apply min-w-0 flex-1 items-center justify-end;
+    }
+
+    .insight-chart-value {
+        @apply mb-2 text-center text-[10px] font-sans-semibold text-muted-foreground;
+    }
+
+    .insight-chart-bar-track {
+        @apply h-34 w-full justify-end overflow-hidden rounded-t-xl bg-muted;
+    }
+
+    .insight-chart-bar {
+        @apply w-full rounded-t-xl bg-accent;
+    }
+
+    .insight-chart-label {
+        @apply mt-2 text-xs font-sans-semibold text-muted-foreground;
+    }
+
+    .insight-history-heading {
+        @apply mb-3 mt-7 flex-row items-center justify-between gap-2;
+    }
+
+    .insight-history-total {
+        @apply text-base font-sans-bold text-primary;
+    }
+
+    .insight-history-list {
+        @apply overflow-hidden rounded-3xl border border-border bg-card px-4;
+    }
+
+    .insight-history-row {
+        @apply relative min-h-20 flex-row items-center gap-3 py-3;
+    }
+
+    .insight-history-icon {
+        @apply size-12 rounded-xl;
+    }
+
+    .insight-history-copy {
+        @apply min-w-0 flex-1;
+    }
+
+    .insight-history-name {
+        @apply text-sm font-sans-bold text-primary;
+    }
+
+    .insight-history-date {
+        @apply mt-1 text-xs font-sans-medium text-muted-foreground;
+    }
+
+    .insight-history-price {
+        @apply text-sm font-sans-bold text-primary;
+    }
+
+    .insight-history-divider {
+        @apply absolute bottom-0 left-15 right-0 h-px bg-border;
+    }
+
+    .insight-empty-card {
+        @apply items-center rounded-3xl border border-border bg-card px-5 py-8;
+    }
+
+    .insight-empty-title {
+        @apply text-base font-sans-bold text-primary;
+    }
+
+    .insight-empty-copy {
+        @apply mt-2 text-center text-sm font-sans-medium text-muted-foreground;
+    }
+
+    .insight-disclaimer {
+        @apply mt-4 px-1 text-xs font-sans-medium leading-5 text-muted-foreground;
+    }
+
     .auth-safe-area {
         @apply flex-1 bg-background;
     }
@@ -354,7 +462,7 @@
     }
 
     .modal-overlay {
-        @apply flex-1 bg-black/50;
+        @apply flex-1 bg-black/30;
     }
 
     .modal-container {

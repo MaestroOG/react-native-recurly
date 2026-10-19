@@ -1,10 +1,11 @@
 import "@/global.css";
+import { PostHogAppProvider } from "@/lib/posthog";
+import { SubscriptionsProvider } from "@/lib/subscriptions";
 import { ClerkProvider } from "@clerk/expo";
 import { tokenCache } from "@clerk/expo/token-cache";
 import { useFonts } from "expo-font";
 import { SplashScreen, Stack } from "expo-router";
 import { useEffect } from "react";
-import { PostHogAppProvider } from "@/lib/posthog";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -38,17 +39,18 @@ export default function RootLayout() {
   return (
     <ClerkProvider tokenCache={tokenCache} publishableKey={publishableKey}>
       <PostHogAppProvider>
-        <Stack>
-          <Stack.Screen
-            name="(tabs)"
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="(auth)"
-            options={{ headerShown: false }}
-          />
-
-        </Stack>
+        <SubscriptionsProvider>
+          <Stack>
+            <Stack.Screen
+              name="(tabs)"
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="(auth)"
+              options={{ headerShown: false }}
+            />
+          </Stack>
+        </SubscriptionsProvider>
       </PostHogAppProvider>
     </ClerkProvider>
   );
